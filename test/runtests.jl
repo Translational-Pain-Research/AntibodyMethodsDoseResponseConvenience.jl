@@ -1,5 +1,7 @@
 using AntibodyMethodsDoseResponseConvenience
-using Test
+using Test, Statistics
+
+cd(@__DIR__)
 
 cd(@__DIR__)
 
@@ -143,6 +145,31 @@ cd(@__DIR__)
         @test condition.minimizer_1(10) == 10
         @test condition.minimizer_2(10) == 10
         @test condition.result_concentrations == [1,2,3]
+
+        # Test mean and error calculation.
+
+        # Single response.
+        condition = FittingCondition(concentrations,responses)
+        @test condition.data.dependent == responses
+        @test condition.data.errors == ones(length(concentrations))
+
+        # Well-behaved replicates.
+        condition = FittingCondition(concentrations,responses, responses .+ 0.5)
+        @test prod(condition.data.dependent .≈ responses .+ 0.25)
+        @test prod(condition.data.errors .≈ std.([[r, r + 0.5] for r in responses]))
+
+        # Tiny differences.
+        condition = FittingCondition(concentrations,responses, responses .+ 1e-17)
+        @test prod(condition.data.dependent .≈ responses .+ 1e-17/2)
+        @test prod(condition.data.errors .≈ std.([[r, r + 1e-17] for r in responses]) )
+        @test prod(condition.data.errors .!= zeros(length(concentrations)))
+
+        # Identical replicates.
+        condition = FittingCondition(concentrations,responses, responses)
+        @test prod(condition.data.dependent .≈ responses)
+        @test prod(condition.data.errors .≈ eps() .* ones(length(concentrations)) )
+        @test prod(condition.data.errors .≈ eps() .* ones(length(concentrations)) )
+        @test prod(condition.data.errors .!=  zeros(length(concentrations)) )
     end
 
 

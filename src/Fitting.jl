@@ -85,7 +85,7 @@ If `gradient = false`, the gradient function `∇f` is ignored, useful e.g. for 
 **Examples**
 
 	minimizer_generator(NelderMead())
-	minimizer_generator(LBFGS(), options = Optim.Optinos(g_tol = 1e-6, iterations = 400), gradient = true)
+	minimizer_generator(LBFGS(), options = Optim.Options(g_tol = 1e-6, iterations = 400), gradient = true)
 """
 function minimizer_generator(optim_minimizer; options = Optim.Options(g_tol = 1e-12, iterations = 2000), gradient::Bool = false)
 	if !gradient
@@ -218,6 +218,13 @@ function FittingCondition(concentrations::AbstractVector{T}, response_replicates
 	mean_responses = [mean([response_replicates[i][j] for i in eachindex(response_replicates)]) for j in eachindex(concentrations)]
 	errors = [std([response_replicates[i][j] for i in eachindex(response_replicates)]) for j in eachindex(concentrations)]
 	replicates = [FittingData(concentrations,response_replicates[i]) for i in eachindex(response_replicates)]
+
+	# If all samples are the same, the std is 0, which causes problems during the fitting.
+	for i in eachindex(errors)
+		if iszero(errors[i])
+			errors[i] = eps()
+		end
+	end
 
 	return FittingCondition(FittingData(concentrations,mean_responses,errors, distributions = (y,m,Δy)-> -(y-m)^2/Δy^2), replicates; args...)
 end
