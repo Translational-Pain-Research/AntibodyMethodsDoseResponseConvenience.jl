@@ -262,7 +262,7 @@ function bin_analysis_plot(results::Union{AdaptiveResult,Nothing},data::Union{Fi
 			push!(concentrations, replicates[i].independent...)
 			push!(responses, replicates[i].dependent...)
 		end
-		plot!(concentrations,responses; replicate_arguments...)
+		plot!(FittingData(concentrations,responses); replicate_arguments...)
 	end
 	
 

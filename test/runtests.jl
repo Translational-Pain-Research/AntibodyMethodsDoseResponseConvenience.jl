@@ -3,8 +3,6 @@ using Test, Statistics
 
 cd(@__DIR__)
 
-cd(@__DIR__)
-
 @testset "AntibodyMethodsDoseResponseConvenience.jl" begin
 
     @testset "Auxiliary functions" begin
