@@ -11,7 +11,7 @@
 
 # Obtain the visual volumes in a logarithmic scale.
 function log_volumes(centers,volumes)
-	return log.(centers .+ volumes/2) .- log.(centers .- volumes/2)
+	return log10.(centers .+ volumes/2) .- log10.(centers .- volumes/2)
 end
 
 
@@ -109,7 +109,7 @@ end
 """
 	mutable struct FittingCondition
 
-Data type storing the necessary information for the common workflow of [`adaptive_dose_response_fit`](@ref). Convenience constructors with recommended options are implemented.
+Data type storing the necessary information for the common workflow of [`adaptive_dose_response_fit`](@ref). Convenience constructors with recommended options are implemented. Note that all objects are "deepcopied" to avoid unwanted mutation.
 
 **Fields**
 
@@ -191,7 +191,16 @@ mutable struct FittingCondition
 			AntibodyMethodsDoseResponse.regular_positive_numbers_check(result_concentrations)
 		end
 
-		return new(data,replicates,grid,path,options_1,options_2,minimizer_1,minimizer_2, result_concentrations)
+		return new(	deepcopy(data),
+					deepcopy(replicates),
+					deepcopy(grid),
+					deepcopy(path),
+					deepcopy(options_1),
+					deepcopy(options_2),
+					deepcopy(minimizer_1),
+					deepcopy(minimizer_2), 
+					deepcopy(result_concentrations)
+				)
 	end
 end
 

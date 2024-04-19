@@ -9,7 +9,7 @@ cd(@__DIR__)
 
         # log_volumes(centers, volumes) | should calculate the volume of the intervals with logarithmic boundaries [log(left), log(right)].
         log_volumes = AntibodyMethodsDoseResponseConvenience.log_volumes
-        @test log_volumes([10,20,30],[2,4,6]) == [log(11)-log(9), log(22)-log(18), log(33)-log(27)]
+        @test log_volumes([10,20,30],[2,4,6]) == [log10(11)-log10(9), log10(22)-log10(18), log10(33)-log10(27)]
 
         # grid_range(concentrations, lower_shift, upper_shift, exponent_rounding)
         # Should return the range of the concentrations, adjusted by the shifts and rounded exponents (if exponent_rounding = true).
@@ -88,9 +88,41 @@ cd(@__DIR__)
             # Test options by checking objective == :log_posterior (default would be :lsq).
             # Test minimizer with simple function (compare to minimizer_generator which was tested above).
 
+        # Explicit constructor and immutability tests.
+        m_data = FittingData([1,2,3],[1,2,3])
+        m_path = "path"
+        m_grid = create_grid([1,2,3])
+        m_options = AdaptiveOptions()
+        m_minimizer = x -> x^2
+        m_result_concentrations = [1,1.5,2,2.5,3]
+        # scale is not used as it alters the options (tested below) which is no issue if input data is properly copied (detached from original objects).
+
+        condition = FittingCondition(m_data, path = m_path, grid = m_grid, options_1 = m_options, options_2 = m_options, minimizer_1  = m_minimizer, minimizer_2 = m_minimizer, result_concentrations = m_result_concentrations)
+        
+        # Mutate the original objects.
+        m_data.independent = [4,5,6]
+        m_path = "other path"
+        refine!(m_grid)
+        m_options.objective = :posterior
+        m_minimizer = x -> -x
+        push!(m_result_concentrations,5)
+
+        # Testing object equality not possible, as recreating the original objects are new, different instances.
+        @test condition.data.independent == [1,2,3]
+        @test condition.path == "path"
+        @test export_all(condition.grid) == export_all(create_grid([1,2,3]))
+        @test condition.options_1.objective == :lsq
+        @test condition.options_2.objective == :lsq
+        @test condition.minimizer_1(3) == 9
+        @test condition.minimizer_2(3) == 9
+        @test condition.result_concentrations == [1,1.5,2,2.5,3]
+
+
+
+
         # Constructor using FittingData.
         condition = FittingCondition(data)
-        @test condition.data == data
+        @test condition.data.independent == data.independent
         @test condition.options_1.objective == :lsq
         @test condition.options_2.objective == :lsq
         @test isnothing(condition.replicates)
@@ -101,6 +133,7 @@ cd(@__DIR__)
 
         # Constructor using replicates | only single replicate.
         condition = FittingCondition(concentrations,responses)
+        @test condition.data.independent == concentrations
         @test condition.options_1.objective == :lsq
         @test condition.options_2.objective == :lsq
         @test isnothing(condition.replicates)
@@ -111,6 +144,7 @@ cd(@__DIR__)
 
         # Constructor using replicates | multiple replicates.
         condition = FittingCondition(concentrations,responses,responses .+ 1)
+        @test condition.data.independent == concentrations
         @test length(condition.replicates) == 2
         @test condition.options_1.objective == :lsq
         @test condition.options_2.objective == :lsq
@@ -126,14 +160,7 @@ cd(@__DIR__)
             # Use trivial optimizer x->x.
             # Use scale (compare to scaled_log_volume_prior).
 
-        # Constructor using FittingData.
-        condition = FittingCondition(data,options_1 = AdaptiveOptions(), options_2 = AdaptiveOptions(), minimizer_1 = x->x, minimizer_2 = x->x, scale = 3, result_concentrations = [1,2,3])
-        @test condition.options_1.objective == :log_posterior
-        @test condition.options_2.objective == :log_posterior
-        @test condition.options_1.prior_generator([10,20,30],[1,2,3],nothing)([2,3,4]) == scaled_log_volume_prior(3)([10,20,30],[1,2,3],nothing)([2,3,4])
-        @test condition.minimizer_1(10) == 10
-        @test condition.minimizer_2(10) == 10
-        @test condition.result_concentrations == [1,2,3]
+        # Constructor using FittingData is already tested (mutability test above).
 
         # Constructor using replicates.
         condition = FittingCondition(concentrations,responses,options_1 = AdaptiveOptions(), options_2 = AdaptiveOptions(), minimizer_1 = x->x, minimizer_2 = x->x, scale = 3, result_concentrations = [1,2,3])

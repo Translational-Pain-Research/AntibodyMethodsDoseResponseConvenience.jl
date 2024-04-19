@@ -155,7 +155,7 @@ end
 	eu_options(n::Integer, bins = nothing; keywords...) 
 Function to return a modified tuple of plotting keyword arguments for the `EpitopeUncertainty` data series. 
 
-`n` must be the number of levels (or larger) for the `EpitopeUncertainty` object that is plotted. If not `bins = nothing` the passed bins are marked in the plot with dashed lines (the color can be changed with the keyword `bin_color`).
+`n` must be the number of levels (or larger) for the `EpitopeUncertainty` object that is plotted. If not `bins = nothing` the passed bins are marked in the plot with dashed lines (the color can be changed with the keyword `bin_color`). The bins must specify the indices of the gird intervals, e.g. `[[1,2,3],[4,5], [9,10,11]]`. The function [`select_indices`](@ref) can be used to obtain grid indices from grid domain ranges.
 
 Most `Plots.jl` keywords are available. By default, the following keyword arguments are set:
 
@@ -214,31 +214,29 @@ export bin_analysis_plot, peak_analysis_plot, uncertainty_plot
 
 """
 	bin_analysis_plot(results::Union{AdaptiveResult,Nothing},data = nothing,replicates = nothing; keywords...)
-Create and return basic `DoseResponseResult` and K_τ-density `gird` plots with the option to evaluate the epitope number in specified bins. 
+Create and return basic plots `(dr_plot, density_plot)` for the `DoseResponseResult` and the K_τ-density `gird`. 
 
-If `results` is an AdaptiveResult, both the gird is plotted into the density plot and the corresponding resulting curve is plotted into the dose-response plot.
+If `results` is an AdaptiveResult, both the fitted gird is plotted into the density plot and the corresponding, theoretical curve is plotted into the dose-response plot.
 
-If `data` is a `FittingData` object the data points are plotted in the dose-response plot. Similarly, if `replicates` is an array of `FittingData` objects, the data points are plotted as replicates in the dose-response plot.
+If `data` is a `FittingData` object the data points are plotted into the dose-response plot. Similarly, if `replicates` is an array of `FittingData` objects, the data points are plotted as replicates in the dose-response plot.
 
 **Keywords**
 
-* `dr_plot = dr_base_plot()`: The base plot onto which the `AdaptiveResult.result` and the `FittingData` objects (`data` and `replicates`) are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). The `AdaptiveResult.result` and `FittingData` objects are then plotted on top.
-* `density_plot = density_base_plot()`: The base plot onto which the `AdaptiveResult.grid` is plotted. It can be any `Plots.jl` plot (e.g. another `K_τ` density plot). The `AdaptiveResult.grid` is then plotted on top.
-* `fit_arguments = fit_options()`: Keyword arguments for the `AdaptiveResult.result` data-series.
-* `data_arguments = data_options()`: Keyword arguments for the `FittingData` data-series.
-* `replicate_arguments = replicate_options()`: Keyword arguments for the replicate data-series.
-* `density_arguments = density_options()`: Keyword arguments for the `AdaptiveResult.grid` data-series.
-* `annotation_arguments = NamedTuple()`: Keyword arguments for bin-annotations in the density plot.
+* `dr_plot = dr_base_plot()`: The base plot onto which the `AdaptiveResult.result` and the `FittingData` objects (`data` and `replicates`) are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
+* `density_plot = density_base_plot()`: The base plot onto which the `AdaptiveResult.grid` is plotted. It can be any `Plots.jl` plot (e.g. another `K_τ` density plot).
+* `fit_arguments = fit_options()`: Keyword argument tuple for the `AdaptiveResult.result` data-series.
+* `data_arguments = data_options()`: Keyword argument tuple for the `FittingData` data-series.
+* `replicate_arguments = replicate_options()`: Keyword argument tuple for the replicate data-series.
+* `density_arguments = density_options()`: Keyword argument tuple for the `AdaptiveResult.grid` data-series.
+* `annotation_arguments = NamedTuple()`: Keyword argument tuple for bin-annotations in the density plot.
 
-**Bin annotations**
+**Annotation bins**
 
-The annotation bins are bins for the K_τ density. The total number of epitopes (in the unit of the density) within the respective bin is calculated and added as annotation to the plot.
+Annotation bins allow to annotate the density plot with the number of epitopes (in units of the density values) in the respective bin. The following keywords can be used for the `annotation_arguments`:
 
-The following keywords can be used for the `annotation_arguments`:
-
-* `annotation_bins = []`: The bins.
+* `annotation_bins = []`: The bins as grid domain ranges, e.g. `[[1e-10,1e-9], [1e-9,1e-8], [1e-5,1e-2]]`.
 * `annotation_size = 10`: Size of the annotation font.
-* `annotation_offset = 0.05`: Relative vertical offset for the annotation from the top of the plot (can also be a vector of offsets that matches the number of bins).
+* `annotation_offset = 0.05`: Relative vertical offset for the annotation from the top of the plot. If a single number is provided, every other annotation is offsetted.  If a length-matched vector of numbers is provided, each annotation is individually offsetted accordingly.
 * `annotation_color = :black`: Color of the annotations.
 * `hover_points = false`: If true, adds scatter-points with tool-tips for the `Plotly.jl` backend.
 
@@ -292,28 +290,32 @@ end
 
 """
 	peak_analysis_plot(results::AdaptiveResult,data = nothing; keywords...)
-Create and return plots to analyze the impact of peaks in the K_τ density on the corresponding dose-response curve.
+Create and return plots to analyze the effect of peaks in the K_τ density on the corresponding dose-response curve.
 
 Returns `(individual_dr_plot, cumulative_dr_plot, density_plot)`, where
 
 * `density_plot` Contains a plot of the K_τ-density with different colors for the different peaks (specified by the bins).
 * `individual_dr_plot`: Contains the individual dose-response curves (color matched) that originate from the different peaks alone.
-* `cumulative_dr_plot`: Contains the cumulative dose-response curves, i.e. dose-responses include the response increases caused by earlier peaks. Again the curves are color matched with the peaks.
+* `cumulative_dr_plot`: Contains the cumulative dose-response curves, i.e. dose-responses include the response increases caused by peaks with smaller K_τ. Again the curves are color matched with the peaks.
 
 If `data` is a `FittingData` object the data points are plotted in the `cumulative_dr_plot`.
 
 **Keywords**
 
-* `individual_dr_plot = dr_base_plot()`: The base plot onto which the individual dose-response curves are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). The individual dose-response curves are then plotted on top.
-* `cumulative_dr_plot = dr_base_plot()`: The base plot onto which the cumulative dose-response curves are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). The individual dose-response curves are then plotted on top.
-* `density_plot = density_base_plot()`: The base plot onto which the K_τ-peaks are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). The K_τ-peaks are then plotted on top.
-* `bins = peak_detection(results.grid, fill = false)[2]`: The bins (domain ranges) that define the K_τ-peaks.
+* `individual_dr_plot = dr_base_plot()`: The base plot onto which the individual dose-response curves are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
+* `cumulative_dr_plot = dr_base_plot()`: The base plot onto which the cumulative dose-response curves are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
+* `density_plot = density_base_plot()`: The base plot onto which the K_τ-peaks are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
+* `fit_arguments = fit_options()`: Keyword argument tuple for the `AdaptiveResult.result` data-series. Both `color` and `label` get overwritten by the `colors` keyword and the peak number (automatically determined).
+* `density_arguments = density_options()`: Keyword argument tuple for the `AdaptiveResult.grid` data-series. Both `color` and `label` get overwritten with `colors` keyword and the peak number (automatically determined).
+* `bins = peak_detection(results.grid, fill = false)[2]`: The bins that define the K_τ-peaks as grid domain ranges, e.g. `[[1e-10,1e-9], [1e-9,1e-8], [1e-5,1e-2]]`.
 * `colors = collect(1:length(bins))`: The colors for the different bins.
 * `join_bins = true`: If true, extends the bins if needed, s.t. there remains no gap between the bins.
 """
 function peak_analysis_plot(results::AdaptiveResult,data::Union{FittingData, Nothing} = nothing;
 	individual_dr_plot = dr_base_plot(),
 	cumulative_dr_plot = dr_base_plot(),
+	fit_arguments = fit_options(),
+	density_arguments = density_options(),
 	density_plot = density_base_plot(),
 	bins = peak_detection(results.grid, fill = false)[2],
 	colors = collect(1:length(bins)),
@@ -326,6 +328,10 @@ function peak_analysis_plot(results::AdaptiveResult,data::Union{FittingData, Not
 		scatter!(data, color = :black, label = "data")
 	end
 
+	local_fit_keys = [k for k in keys(fit_arguments) if k !== :color && k !== :label]
+	local_fit_arguments = NamedTuple(zip(local_fit_keys,[fit_arguments[k] for k in local_fit_keys]))
+	local_density_keys = [k for k in keys(density_arguments) if k !== :color && k !== :label]
+	local_density_arguments = NamedTuple(zip(local_density_keys,[density_arguments[k] for k in local_density_keys]))
 
 	sorted_bins = sort(bins)
 
@@ -343,7 +349,7 @@ function peak_analysis_plot(results::AdaptiveResult,data::Union{FittingData, Not
 		single_peak_grid = restrict_domain!(deepcopy(results.grid),lower = sorted_bins[i][1], upper = sorted_bins[i][2], weight_distribution = :log)
 
 		density_plot = plot(density_plot)
-		plot!(DensityPlot(single_peak_grid), color = colors[i], fill = 0, fillalpha = 0.5, label = "peak $i")
+		plot!(DensityPlot(single_peak_grid); color = colors[i],  label = "peak $i", local_density_arguments...)
 
 		if length(results.optimizer) > length(results.grid)
 			dose_response = DoseResponseResult(single_peak_grid,results.result.concentrations, offset = results.optimizer[end])
@@ -351,7 +357,7 @@ function peak_analysis_plot(results::AdaptiveResult,data::Union{FittingData, Not
 			dose_response = DoseResponseResult(single_peak_grid,results.result.concentrations)
 		end
 		individual_dr_plot = plot(individual_dr_plot)
-		plot!(dose_response, color = colors[i], label = "peak $i")
+		plot!(dose_response; color = colors[i], label = "peak $i", local_fit_arguments...)
 
 		cumulative_peak_grid = restrict_domain!(deepcopy(results.grid), upper = sorted_bins[i][2], weight_distribution = :log)
 		if length(results.optimizer) > length(results.grid)
@@ -360,7 +366,7 @@ function peak_analysis_plot(results::AdaptiveResult,data::Union{FittingData, Not
 			dose_response = DoseResponseResult(cumulative_peak_grid,results.result.concentrations)
 		end
 		cumulative_dr_plot = plot(cumulative_dr_plot)
-		plot!(dose_response, color = colors[i], label = "peak $i")
+		plot!(dose_response; color = colors[i], label = "peak $i", local_fit_arguments...)
 	end
 	return individual_dr_plot, cumulative_dr_plot, density_plot
 end
@@ -384,10 +390,10 @@ The estimated bounds of the `DoseResponseUncertainty` and `EpitopeUncertainty` a
 
 **Keywords**
 
-* `dr_plot = dr_base_plot()`: The base plot onto which the `AdaptiveResult.result` and the `FittingData` objects (`data` and `replicates`) are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). The `AdaptiveResult.result` and `FittingData` objects are then plotted on top.
-* `density_plot = density_base_plot()`: The base plot onto which the `AdaptiveResult.grid` is plotted. It can be any `Plots.jl` plot (e.g. another `K_τ` density plot). The `AdaptiveResult.grid` is then plotted on top.
-* `eu_arguments = eu_options(length(e_uncertainty.levels))`: Keyword arguments for the `EpitopeUncertainty` data series.
-* `du_arguments = du_options(length(d_uncertainty.levels))`: Keyword arguments for the `DoseResponseUncertainty` data series.
+* `dr_plot = dr_base_plot()`: The base plot onto which the `AdaptiveResult.result` and uncertainty ribbons are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
+* `density_plot = density_base_plot()`: The base plot onto which the `AdaptiveResult.grid` and uncertainty ribbons are plotted. It can be any `Plots.jl` plot (e.g. another `K_τ` density plot). 
+* `eu_arguments = eu_options(length(e_uncertainty.levels))`: Keyword argument tuple for the `EpitopeUncertainty` data series.
+* `du_arguments = du_options(length(d_uncertainty.levels))`: Keyword argument tuple for the `DoseResponseUncertainty` data series.
 
 """
 function uncertainty_plot(e_uncertainty::EpitopeUncertainty,d_uncertainty::DoseResponseUncertainty,grid::AdaptiveDensityApproximation.OneDimGrid;
