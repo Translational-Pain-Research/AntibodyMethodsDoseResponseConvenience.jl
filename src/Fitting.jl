@@ -133,7 +133,9 @@ Manual specification of the `FittingData` object and the optional replicates. Re
 
 Construct a FittingCondition from a concentration vector and response vectors (variable number of arguments). This automatically creates the main `FittingData` object, and the vector of `FittingData` objects for the replicates.
 
-The main `FittingData` object uses the mean values of the responses together with the standard deviations as uncertainties. The uncertainty distributions are unnormalized logarithmic normal distributions.
+The main `FittingData` object uses the mean values of the responses together with the standard deviations as uncertainties. The uncertainty distributions are unnormalized logarithmic normal distributions:
+
+	(y,m,Δy)-> -(y-m)^2/Δy^2
 
 **Keywords**
 
