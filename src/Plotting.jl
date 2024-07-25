@@ -13,7 +13,7 @@ export load_results
 
 """
 	load_results(path::AbstractString)
-Load results and data as saved by [`fit_condition`](@ref). Returns `(result, data,replicates)` as `AdaptiveResult`, `FittingData` and vector of `FittingData` objects.
+Load results and data as saved by [`fit_condition`](@ref). Returns `(result, data,replicates)` as [`AdaptiveResult`](@ref), [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) and vector of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects.
 """
 function load_results(path::AbstractString)
 	# Full result data must be present at the path!
@@ -67,7 +67,7 @@ export dr_base_plot, density_base_plot,data_options, replicate_options, fit_opti
 
 """
 	function dr_base_plot(keywords...)
-Function to return a modified dose-response base plot. Most `Plots.jl` keywords are available. By default, the following keyword arguments are set:
+Function to return a modified dose-response base plot. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
 
 * `xaxis = :log`
 * `xlabel = "dilution"`
@@ -82,7 +82,7 @@ end
 
 """
 	density_base_plot(keywords...) 
-Function to return a modified K_τ density base plot. Most `Plots.jl` keywords are available. By default, the following keyword arguments are set:
+Function to return a modified K_τ density base plot. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
 
 * `xaxis = :log`
 * `xlabel = "K_τ"`
@@ -97,7 +97,7 @@ end
 
 """
 	data_options(keywords...) 
-Function to return a modified tuple of plotting keyword arguments for the `FittingData` object. Most `Plots.jl` keywords are available. By default, the following keyword arguments are set:
+Function to return a modified tuple of plotting keyword arguments for the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
 
 * `seriestype = :scatter`
 * `color = 1`
@@ -106,7 +106,7 @@ Function to return a modified tuple of plotting keyword arguments for the `Fitti
 
 In addition, the following keyword ia available:
 
-* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`) See [Measurement data - Plotting](@ref measurement_data_plotting)) for further information.
+* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`). See [Measurement data - Plotting](@ref measurement_data_plotting) for further information.
 """
 function data_options(;seriestype = :scatter,color = 1, label = "mean values", yerrors = nothing, args...)
 	return (seriestype = seriestype,color = color, label = label, yerrors = yerrors, args...)
@@ -115,7 +115,7 @@ end
 
 """
 	replicate_options(keywords...) 
-Function to return a modified tuple of plotting keyword arguments for the replicate data. Most `Plots.jl` keywords are available. By default, the following keyword arguments are set:
+Function to return a modified tuple of plotting keyword arguments for the replicate data. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
 
 * `seriestype = :scatter`
 * `color = :black`
@@ -125,7 +125,7 @@ Function to return a modified tuple of plotting keyword arguments for the replic
 
 In addition, the following keyword ia available:
 
-* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`) See [Measurement data - Plotting](@ref measurement_data_plotting)) for further information.
+* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`). See [Measurement data - Plotting](@ref measurement_data_plotting) for further information.
 """
 function replicate_options(;seriestype = :scatter ,color = :black, opacity = 0.2, label = "replicates", yerror = nothing, args...)
 	return (seriestype = seriestype ,color = color, opacity = opacity, label = label, yerror = yerror, args...)
@@ -134,7 +134,7 @@ end
 
 """
 	fit_options(keywords...) 
-Function to return a modified tuple of plotting keyword arguments for the `DoseResponseResult` response curve. Most `Plots.jl` keywords are available. By default, the following keyword arguments are set:
+Function to return a modified tuple of plotting keyword arguments for the [`DoseResponseResult`](@ref) response curve. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
 
 * `seriestype = :path`
 * `color = 2`
@@ -142,7 +142,7 @@ Function to return a modified tuple of plotting keyword arguments for the `DoseR
 
 In addition, the following keyword ia available:
 
-* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`) See [Measurement data - Plotting](@ref measurement_data_plotting)) for further information.
+* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`). See [Measurement data - Plotting](@ref measurement_data_plotting) for further information.
 """
 function fit_options(;seriestype = :path, color = 2, label = "fit result", args...)
 	return (seriestype = seriestype, color = color, label = label, args...)
@@ -151,17 +151,17 @@ end
 
 """
 	density_options(keywords...) 
-Function to return a modified tuple of plotting keyword arguments for the `DoseResponseResult` density. Most `Plots.jl` keywords are available. By default, the following keyword arguments are set:
+Function to return a modified tuple of plotting keyword arguments for the [`DoseResponseResult`](@ref) density. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
 
 * `seriestype = :path`
 * `color = 2`
-* `fillalpha = 0.5`
+* `fillalpha = 0.5
 * `label = "fitted density"`
 
 
 In addition, the following keyword ia available:
 
-* `volume_normalization = :log`: Normalizes the grid weights for plotting. If `:none` the weights are not normalized, if `:linear` the weights are divided by their corresponding interval length and if `:log` the weights are divided by the interval length as it appears in a logarithmic plot. See [Background: log-volume normalization](@ref log_volume_normalization) for further explanation.
+* `volume_normalization = :log`: Normalizes the grid weights for plotting. If `:none` the weights are not normalized, if `:linear` the weights are divided by their corresponding interval length and if `:log` the weights are divided by the interval length as it appears in a logarithmic plot. See [Background: log-volume normalization](@ref log_volume_normalization) for further information.
 
 """
 function density_options(;color = 2, fill = 0, fillalpha = 0.5, label = "fitted density", args...)
@@ -171,16 +171,16 @@ end
 
 """
 	eu_options(n::Integer, bins = nothing; keywords...) 
-Function to return a modified tuple of plotting keyword arguments for the `EpitopeUncertainty` data series. 
+Function to return a modified tuple of plotting keyword arguments for the [`EpitopeUncertainty`](@ref) data series. 
 
-`n` must be the number of levels (or larger) for the `EpitopeUncertainty` object that is plotted. If not `bins = nothing` the passed bins are marked in the plot with dashed lines (the color can be changed with the keyword `bin_color`). The bins must specify the indices of the gird intervals, e.g. `[[1,2,3],[4,5], [9,10,11]]`. The function [`select_indices`](@ref) can be used to obtain grid indices from grid domain ranges.
+`n` must be equal to the number of levels (or larger) of the `EpitopeUncertainty` object that is plotted. If not `bins = nothing` the passed bins are marked in the plot with dashed lines (the color can be changed with the keyword `bin_color`). The bins must specify the indices of the gird intervals, e.g. `[[1,2,3],[4,5], [9,10,11]]`. The function [`select_indices`](https://antibodypackages.github.io/AdaptiveDensityApproximation-documentation/api/#AdaptiveDensityApproximation.select_indices) can be used to obtain grid indices from grid domain ranges.
 
-Most `Plots.jl` keywords are available. In addition, the following keyword arguments are available:
+Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. In addition, the following keyword arguments are available:
 
-* `colors = colormap("RdBu",n)[end:-1:1]` An array of colors (that `Plots.jl` accepts for the `color` keyword) corresponding to the different uncertainty levels. If the array contains less colors than uncertainty levels, the last color is repeated for the remaining levels.
+* `colors = colormap("RdBu",n)[end:-1:1]`: Array of colors (that [`Plots.jl`](https://docs.juliaplots.org/stable/) accepts for the `color` keyword) corresponding to the different uncertainty levels. If the array contains less colors than uncertainty levels, the last color is repeated for the remaining levels.
 * `opacities = [1]`: Array of opacities (number between `0` and `1`) that correspond to the different uncertainty levels. Again, the last opacity is repeated if there are more uncertainty levels than opacities.
 * `reverse = false`: If `true` the plotting order of the uncertainty levels is reversed. Since the uncertainty ranges are plotted on top of each other, this can become necessary when the [`EpitopeUncertainty`](@ref) constructor for samples is used, where larger levels correspond to larger uncertainty (as opposed to the bin-wise shifting constructor). 
-* `volume_normalization = :log`: Normalizes the grid weights for plotting. If `:none` the weights are not normalized, if `:linear` the weights are divided by their corresponding interval length and if `:log` the weights are divided by the interval length as it appears in a logarithmic plot. See [Background: log-volume normalization](@ref log_volume_normalization) for further explanation.
+* `volume_normalization = :log`: Normalizes the grid weights for plotting. If `:none` the weights are not normalized, if `:linear` the weights are divided by their corresponding interval length and if `:log` the weights are divided by the interval length as it appears in a logarithmic plot. See [Background: log-volume normalization](@ref log_volume_normalization) for further information.
 * `hide_labels = true`: If `true` the labels are omitted. Can become necessary when a large number of uncertainty levels is used.
 * `bins = nothing`: Specifies the positions for the bin-markers (dashed lines). The bins must specify the interval indices, e.g. `[[1,2,3], [5,6]]`. Ideally, the bins used for the [`EpitopeUncertainty`](@ref) construction should be used. If `bins = nothing`, bin markers are omitted.
 * `bin_color = :gray`: Color of the bin markers.
@@ -192,17 +192,17 @@ end
 
 """
 	du_options(n::Integer; keywords...) 
-Function to return a modified tuple of plotting keyword arguments for the `EpitopeUncertainty` data series. 
+Function to return a modified tuple of plotting keyword arguments for the [`DoseResponseUncertainty`](@ref) data series. 
 
-`n` must be the number of levels (or larger) for the `EpitopeUncertainty` object that is plotted. 
+`n` must be equal to the number of levels (or larger) of the [`DoseResponseUncertainty`](@ref) object that is plotted. 
 
-Most `Plots.jl` keywords are available. In addition, the following keyword arguments are available:
+Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. In addition, the following keyword arguments are available:
 
-* `colors = colormap("RdBu",n)[end:-1:1]` An array of colors (that `Plots.jl` accepts for the `color` keyword) corresponding to the different uncertainty levels. If the array contains less colors than uncertainty levels, the last color is repeated for the remaining levels.
+* `colors = colormap("RdBu",n)[end:-1:1]`: Array of colors (that [`Plots.jl`](https://docs.juliaplots.org/stable/) accepts for the `color` keyword) corresponding to the different uncertainty levels. If the array contains less colors than uncertainty levels, the last color is repeated for the remaining levels.
 * `opacities = [1]`: Array of opacities (number between `0` and `1`) that correspond to the different uncertainty levels. Again, the last opacity is repeated if there are more uncertainty levels than opacities.
 * `reverse = false`: If `true` the plotting order of the uncertainty levels is reversed. Since the uncertainty ranges are plotted on top of each other, this can become necessary when the [`EpitopeUncertainty`](@ref) constructor for samples is used, where larger levels correspond to larger uncertainty (as opposed to the bin-wise shifting constructor). 
 * `hide_labels = true`: If `true` the labels are omitted. Can become necessary when a large number of uncertainty levels is used.
-* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`) See [Measurement data - Plotting](@ref measurement_data_plotting)) for further information.
+* `filter_zeros = [true,false]`: Select to omit data points from the plot when the x-value is zero (if `true` for first element of `filter_zeros`) or the y-value is zero (if `true` for second element of `filter_zeros`). See [Measurement data - Plotting](@ref measurement_data_plotting)) for further information.
 """
 function du_options(n::Integer; colors =colormap("RdBu", n)[end:-1:1], opacities = [1], args...)
 	return (colors = colors, opacities = opacities, args...)
@@ -239,22 +239,26 @@ export bin_analysis_plot, peak_analysis_plot, uncertainty_plot
 
 
 """
-	bin_analysis_plot(results::Union{AdaptiveResult,Nothing},data = nothing,replicates = nothing; keywords...)
-Create and return basic plots `(dr_plot, density_plot)` for the `DoseResponseResult` and the K_τ-density `gird`. 
+	bin_analysis_plot(results::Union{AdaptiveResult,Nothing},
+		data = nothing,
+		replicates = nothing; 
+		keywords...
+	)
+Create and return basic plots `(dr_plot, density_plot)` for the [`DoseResponseResult`](@ref) and the K_τ-density `gird`. 
 
-If `results` is an AdaptiveResult, both the fitted gird is plotted into the density plot and the corresponding, theoretical curve is plotted into the dose-response plot.
+If `results` is an [`AdaptiveResult`](@ref), both the fitted gird is plotted into the density plot and the corresponding curve is plotted into the dose-response plot.
 
-If `data` is a `FittingData` object the data points are plotted into the dose-response plot. Similarly, if `replicates` is an array of `FittingData` objects, the data points are plotted as replicates in the dose-response plot.
+If `data` is a [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object the data points are plotted into the dose-response plot. Similarly, if `replicates` is an array of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects, the data points are plotted as replicates in the dose-response plot.
 
 **Keywords**
 
-* `dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.result` and the `FittingData` objects (`data` and `replicates`) are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
-* `density_plot = `[`density_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.grid` is plotted. It can be any `Plots.jl` plot (e.g. another `K_τ` density plot).
+* `dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.result` and the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects (`data` and `replicates`) are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another dose-response plot). 
+* `density_plot = `[`density_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.grid` is plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another `K_τ` density plot).
 * `fit_arguments = `[`fit_options()`](@ref): Keyword argument tuple for the `AdaptiveResult.result` data-series.
-* `data_arguments = `[`data_options()`](@ref): Keyword argument tuple for the `FittingData` data-series.
+* `data_arguments = `[`data_options()`](@ref): Keyword argument tuple for the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) data-series.
 * `replicate_arguments = `[`replicate_options()`](@ref): Keyword argument tuple for the replicate data-series.
 * `density_arguments = `[`density_options()`](@ref): Keyword argument tuple for the `AdaptiveResult.grid` data-series.
-* `annotation_arguments = NamedTuple()`: Keyword argument tuple for bin-annotations in the density plot.
+* `annotation_arguments = NamedTuple()`: Keyword argument tuple for bin-annotations in the density plot. See below for further information.
 
 **Annotation bins**
 
@@ -262,9 +266,9 @@ Annotation bins allow to annotate the density plot with the number of epitopes (
 
 * `annotation_bins = []`: The bins as grid domain ranges, e.g. `[[1e-10,1e-9], [1e-9,1e-8], [1e-5,1e-2]]`.
 * `annotation_size = 10`: Size of the annotation font.
-* `annotation_offset = 0.05`: Relative vertical offset for the annotation from the top of the plot. If a single number is provided, every other annotation is offsetted.  If a length-matched vector of numbers is provided, each annotation is individually offsetted accordingly.
+* `annotation_offset = 0.05`: Relative vertical offset from the top of the plot for the annotation labels. If a single number is provided, every other annotation is offsetted.  If a length-matched vector of numbers is provided, each annotation is individually offsetted accordingly.
 * `annotation_color = :black`: Color of the annotations.
-* `hover_points = false`: If true, adds scatter-points with tool-tips for the `Plotly.jl` backend.
+* `hover_points = false`: If true, adds scatter-points with tool-tips for the [Plotly/PlotlyJs backend](https://docs.juliaplots.org/latest/backends/).
 
 """
 function bin_analysis_plot(results::Union{AdaptiveResult,Nothing},data::Union{FittingData,Nothing} = nothing,replicates::Union{Nothing,AbstractArray{FittingData}} = nothing;
@@ -320,19 +324,19 @@ Create and return plots to analyze the effect of peaks in the K_τ density on th
 
 Returns `(individual_dr_plot, cumulative_dr_plot, density_plot)`, where
 
-* `density_plot` Contains a plot of the K_τ-density with different colors for the different peaks (specified by the bins).
-* `individual_dr_plot`: Contains the individual dose-response curves (color matched) that originate from the different peaks alone.
-* `cumulative_dr_plot`: Contains the cumulative dose-response curves, i.e. dose-responses include the response increases caused by peaks with smaller K_τ. Again the curves are color matched with the peaks.
+* `density_plot` contains a plot of the K_τ-density with different colors for the different peaks (specified by the bins).
+* `individual_dr_plot` contains the individual dose-response curves (color matched) that originate from the different peaks.
+* `cumulative_dr_plot` contains the cumulative dose-response curves, i.e. dose-responses include the response increases caused by peaks with smaller K_τ. Again the curves are color matched with the peaks.
 
-If `data` is a `FittingData` object the data points are plotted in the `cumulative_dr_plot`.
+If `data` is a [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object the data points are plotted in the `cumulative_dr_plot`.
 
 **Keywords**
 
-* `individual_dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the individual dose-response curves are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
-* `cumulative_dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the cumulative dose-response curves are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
-* `density_plot = `[`density_base_plot()`](@ref): The base plot onto which the K_τ-peaks are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
+* `individual_dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the individual dose-response curves are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another dose-response plot). 
+* `cumulative_dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the cumulative dose-response curves are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another dose-response plot). 
+* `density_plot = `[`density_base_plot()`](@ref): The base plot onto which the `K_τ`-peaks are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another `K_τ`-density plot). 
 * `fit_arguments = `[`fit_options()`](@ref): Keyword argument tuple for the `AdaptiveResult.result` data-series. Both `color` and `label` get overwritten by the `colors` keyword and the peak number (automatically determined).
-* `density_arguments = `[`density_options()`](@ref): Keyword argument tuple for the `AdaptiveResult.grid` data-series. Both `color` and `label` get overwritten with `colors` keyword and the peak number (automatically determined).
+* `density_arguments = `[`density_options()`](@ref): Keyword argument tuple for the `AdaptiveResult.grid` data-series. Both `color` and `label` get overwritten by the `colors` keyword and the peak number (automatically determined).
 * `bins = `[`peak_detection`](@ref)`(results.grid, fill = false)[2]`: The bins that define the K_τ-peaks as grid domain ranges, e.g. `[[1e-10,1e-9], [1e-9,1e-8], [1e-5,1e-2]]`.
 * `colors = collect(1:length(bins))`: The colors for the different bins.
 * `join_bins = true`: If true, extends the bins if needed, s.t. there remains no gap between the bins.
@@ -409,17 +413,22 @@ end
 
 
 """
-	uncertainty_plot(e_uncertainty::EpitopeUncertainty,d_uncertainty::DoseResponseUncertainty,grid::OneDimGrid; keywords...)
+	uncertainty_plot(e_uncertainty::EpitopeUncertainty,
+		d_uncertainty::DoseResponseUncertainty,
+		grid::OneDimGrid; 
+		keywords...
+	)
+
 Create and return uncertainty visualizations `(dr_uncertainty_plot, density_uncertainty_plot)`.
 
-The estimated bounds of the `DoseResponseUncertainty` and `EpitopeUncertainty` are plotted as color-matched ribbons.
+The estimated bounds of the [`DoseResponseUncertainty`](@ref) and [`EpitopeUncertainty`](@ref) are plotted as color-matched ribbons.
 
 **Keywords**
 
-* `dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.result` and uncertainty ribbons are plotted. It can be any `Plots.jl` plot (e.g. another dose-response plot). 
-* `density_plot = `[`density_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.grid` and uncertainty ribbons are plotted. It can be any `Plots.jl` plot (e.g. another `K_τ` density plot). 
-* `eu_arguments = `[`eu_options`](@ref)`(length(e_uncertainty.levels))`: Keyword argument tuple for the `EpitopeUncertainty` data series.
-* `du_arguments = `[`du_options`](@ref)`(length(d_uncertainty.levels))`: Keyword argument tuple for the `DoseResponseUncertainty` data series.
+* `dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.result` and uncertainty ribbons are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another dose-response plot). 
+* `density_plot = `[`density_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.grid` and uncertainty ribbons are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another `K_τ` density plot). 
+* `eu_arguments = `[`eu_options`](@ref)`(length(e_uncertainty.levels))`: Keyword argument tuple for the [`EpitopeUncertainty`](@ref) data series. See [`EpitopeUncertainty` - plotting](@ref EpitopeUncertainty-plotting) for further information.
+* `du_arguments = `[`du_options`](@ref)`(length(d_uncertainty.levels))`: Keyword argument tuple for the [`DoseResponseUncertainty`](@ref) data series. See [`DoseResponseUncertainty` - plotting](@ref DoseResponseUncertainty-plotting) for further information.
 
 """
 function uncertainty_plot(e_uncertainty::EpitopeUncertainty,d_uncertainty::DoseResponseUncertainty,grid::AdaptiveDensityApproximation.OneDimGrid;

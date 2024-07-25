@@ -59,10 +59,10 @@ export scaled_log_volume_prior, minimizer_generator, FittingCondition, fit_condi
 Create a prior generator (see [`AdaptiveOptions`](@ref)) that generates the following prior:
 
 ```math
-\text{prior}(\lambda) = - \frac{\text{scale}}{\text{length}(λ)^2} \cdot \left( \text{offset}^2 + \sum_{i=2}^{\text{length}(\lambda)} \left(\frac{\lambda_{i-1}}{\log(r_{i-1})-\log(l_{i-1})} - \frac{\lambda_{i}}{\log(r_{i})-\log(l_{i})}\right)^2 \right)
+\text{prior}(\lambda) = - \frac{\text{scale}}{\text{length}(λ)^2} \cdot \left( \text{offset}^2 + \sum_{i=2}^{\text{length}(\lambda)} \left(\frac{\lambda_{i-1}}{\log_{10}(r_{i-1})-\log_{10}(l_{i-1})} - \frac{\lambda_{i}}{\log_{10}(r_{i})-\log_{10}(l_{i})}\right)^2 \right)
 ```
 
-where ``[l_i,r_i]`` are the intervals corresponding to ``\lambda_i``, calculated from `centers` and `volumes`.
+where ``[l_i,r_i]`` are the intervals corresponding to ``\lambda_i``.
 """
 function scaled_log_volume_prior(scale::Real = 1)
 	return function(centers, volumes, offset) 
@@ -77,15 +77,26 @@ end
 
 
 """
-	minimizer_generator(optim_minimizer; options = Optim.Options(g_tol = 1e-12, iterations = 2000), gradient::Bool = false)
-Create minimization function `(f,∇f,initial_point) -> minimizing_point` as specified in [`adaptive_dose_response_fit`](@ref), using minimizers from `Optim.jl` (e.g. `NelderMead()` or `LBFGS()`).
+	minimizer_generator(optim_minimizer; 
+		options = Optim.Options(g_tol = 1e-12, iterations = 2000), 
+		gradient::Bool = false
+	)
+	
+Create a minimization function `(f,∇f,initial_point) -> minimizing_point` as specified in [`adaptive_dose_response_fit`](@ref), using minimizers from [`Optim.jl`](https://julianlsolvers.github.io/Optim.jl/stable/) (e.g. `NelderMead()` or `LBFGS()`).
 
-If `gradient = false`, the gradient function `∇f` is ignored, useful e.g. for [`adaptive_dose_response_fit`](@ref) where `∇f = nothing` is passed in some cases.
+If `gradient = false`, the gradient function `∇f` is ignored, useful e.g. for [`adaptive_dose_response_fit`](@ref) where `∇f = nothing` is internally passed as argument in some cases.
 
 **Examples**
 
-	minimizer_generator(NelderMead())
-	minimizer_generator(LBFGS(), options = Optim.Options(g_tol = 1e-6, iterations = 400), gradient = true)
+```julia
+minimizer_generator(NelderMead())
+```
+```julia
+minimizer_generator(LBFGS(), 
+	options = Optim.Options(g_tol = 1e-6, iterations = 400), 
+	gradient = true
+)
+```
 """
 function minimizer_generator(optim_minimizer; options = Optim.Options(g_tol = 1e-12, iterations = 2000), gradient::Bool = false)
 	if !gradient
@@ -113,12 +124,12 @@ Data type storing the necessary information for the common workflow of [`adaptiv
 
 **Fields**
 
-* `data`: The `FittingData` object containing the dose-response data.
-* `replicates`: Vector of `FittingData` objects that constitute the replicates of measured dose-response curves.
+* `data`: The [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object containing the dose-response data.
+* `replicates`: Vector of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects that constitute the replicates of measured dose-response curves.
 * `grid`: Initial `K_τ` grid that is adaptively refined.
 * `path`: Fitting results are saved to `path` if `path != ""`.
-* `options_1`: `AdaptiveOptions` for the first run of [`adaptive_dose_response_fit`](@ref).
-* `options_2`: `AdaptiveOptions` for a second run of [`adaptive_dose_response_fit`](@ref), e.g. to use a final, non-adaptive, gradient-based fit.
+* `options_1`: [`AdaptiveOptions`](@ref) for the first run of [`adaptive_dose_response_fit`](@ref).
+* `options_2`: [`AdaptiveOptions`](@ref) for a second run of [`adaptive_dose_response_fit`](@ref), e.g. to use a final, non-adaptive, gradient-based fit.
 * `minimizer_1`: Minimization function for the first run of [`adaptive_dose_response_fit`](@ref).
 * `minimizer_2`: Minimization function for the second run of [`adaptive_dose_response_fit`](@ref).
 * `result_concentrations`: Concentrations to be used for the dose-response curve calculated from the fit result. This allows to obtain smooth result curves. If `result_concentrations = nothing`, the concentrations of `data` are used.
@@ -126,14 +137,15 @@ Data type storing the necessary information for the common workflow of [`adaptiv
 **Convenience constructors**
 
 	FittingCondition(data::FittingData, replicates = nothing; keywords...)
-Manual specification of the `FittingData` object and the optional replicates. Recommended fitting options are predefined and `path=""` is set to avoid accidental creation of files. The keywords are equivalent to the fields.
+Manual specification of the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object and the optional replicates. Recommended fitting options are predefined and `path=""` is set to avoid accidental creation of files. 
 
 
-	FittingCondition(concentrations::AbstractVector, response_replicates::AbstractVector...; keywords...)
+	FittingCondition(concentrations::AbstractVector, response_replicates::AbstractVector...; 
+		keywords...)
 
-Construct a FittingCondition from a concentration vector and response vectors (variable number of arguments). This automatically creates the main `FittingData` object, and the vector of `FittingData` objects for the replicates.
+Construct a FittingCondition from a concentration vector and response vectors (variable number of arguments). This automatically creates the main [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object, and the vector of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects for the replicates.
 
-The main `FittingData` object uses the mean values of the responses together with the standard deviations as uncertainties. The uncertainty distributions are unnormalized logarithmic normal distributions:
+The main [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object uses the mean values of the responses together with the standard deviations as uncertainties. The uncertainty distributions are unnormalized logarithmic normal distributions:
 
 	(y,m,Δy)-> -(y-m)^2/Δy^2
 
@@ -250,7 +262,7 @@ end
 	fit_condition(condition::FittingCondition)
 Obtain the results for a `FittingCondition` object (i.e. fitting the data).
 
-Returns the `AdaptiveResult` object and saves the data (`FittingCondition` and `AdaptiveResults` objects) to `FittingCondition.path` if not `FittingCondition.path = ""`.
+Returns the [`AdaptiveResult`](@ref) object and saves the data ([`FittingCondition`](@ref) and [`AdaptiveResult`](@ref) objects) to `FittingCondition.path` if not `FittingCondition.path = ""`.
 """
 function fit_condition(condition::FittingCondition)
 	fitting_grid = deepcopy(condition.grid)
@@ -306,7 +318,7 @@ end
 
 """
 	fit_conditions(conditions)
-Multithreaded application of [`fit_condition`](@ref) to a collection of `FittingCondition` objects (`conditions`).
+Multithreaded application of [`fit_condition`](@ref) to a collection of [`FittingCondition`](@ref) objects (`conditions`).
 """
 function fit_conditions(conditions)
 	fitting_progress = Progress(length(conditions))
