@@ -124,8 +124,8 @@ Data type storing the necessary information for the common workflow of [`adaptiv
 
 **Fields**
 
-* `data`: The [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object containing the dose-response data.
-* `replicates`: Vector of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects that constitute the replicates of measured dose-response curves.
+* `data`: The [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object containing the dose-response data.
+* `replicates`: Vector of [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects that constitute the replicates of measured dose-response curves.
 * `grid`: Initial `K_τ` grid that is adaptively refined.
 * `path`: Fitting results are saved to `path` if `path != ""`.
 * `options_1`: [`AdaptiveOptions`](@ref) for the first run of [`adaptive_dose_response_fit`](@ref).
@@ -137,15 +137,15 @@ Data type storing the necessary information for the common workflow of [`adaptiv
 **Convenience constructors**
 
 	FittingCondition(data::FittingData, replicates = nothing; keywords...)
-Manual specification of the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object and the optional replicates. Recommended fitting options are predefined and `path=""` is set to avoid accidental creation of files. 
+Manual specification of the [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object and the optional replicates. Recommended fitting options are predefined and `path=""` is set to avoid accidental creation of files. 
 
 
 	FittingCondition(concentrations::AbstractVector, response_replicates::AbstractVector...; 
 		keywords...)
 
-Construct a FittingCondition from a concentration vector and response vectors (variable number of arguments). This automatically creates the main [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object, and the vector of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects for the replicates.
+Construct a FittingCondition from a concentration vector and response vectors (variable number of arguments). This automatically creates the main [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object, and the vector of [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects for the replicates.
 
-The main [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object uses the mean values of the responses together with the standard deviations as uncertainties. The uncertainty distributions are unnormalized logarithmic normal distributions:
+The main [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object uses the mean values of the responses together with the standard deviations as uncertainties. The uncertainty distributions are unnormalized logarithmic normal distributions:
 
 	(y,m,Δy)-> -(y-m)^2/Δy^2
 

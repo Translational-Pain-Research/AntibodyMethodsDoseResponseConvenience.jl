@@ -13,7 +13,7 @@ export load_results
 
 """
 	load_results(path::AbstractString)
-Load results and data as saved by [`fit_condition`](@ref). Returns `(result, data,replicates)` as [`AdaptiveResult`](@ref), [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) and vector of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects.
+Load results and data as saved by [`fit_condition`](@ref). Returns `(result, data,replicates)` as [`AdaptiveResult`](@ref), [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) and vector of [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects.
 """
 function load_results(path::AbstractString)
 	# Full result data must be present at the path!
@@ -97,7 +97,7 @@ end
 
 """
 	data_options(keywords...) 
-Function to return a modified tuple of plotting keyword arguments for the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
+Function to return a modified tuple of plotting keyword arguments for the [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object. Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. By default, the following keyword arguments are set:
 
 * `seriestype = :scatter`
 * `color = 1`
@@ -173,7 +173,7 @@ end
 	eu_options(n::Integer, bins = nothing; keywords...) 
 Function to return a modified tuple of plotting keyword arguments for the [`EpitopeUncertainty`](@ref) data series. 
 
-`n` must be equal to the number of levels (or larger) of the `EpitopeUncertainty` object that is plotted. If not `bins = nothing` the passed bins are marked in the plot with dashed lines (the color can be changed with the keyword `bin_color`). The bins must specify the indices of the gird intervals, e.g. `[[1,2,3],[4,5], [9,10,11]]`. The function [`select_indices`](https://antibodypackages.github.io/AdaptiveDensityApproximation-documentation/api/#AdaptiveDensityApproximation.select_indices) can be used to obtain grid indices from grid domain ranges.
+`n` must be equal to the number of levels (or larger) of the `EpitopeUncertainty` object that is plotted. If not `bins = nothing` the passed bins are marked in the plot with dashed lines (the color can be changed with the keyword `bin_color`). The bins must specify the indices of the gird intervals, e.g. `[[1,2,3],[4,5], [9,10,11]]`. The function [`select_indices`](https://translational-pain-research.github.io/AdaptiveDensityApproximation-documentation/api/#AdaptiveDensityApproximation.select_indices) can be used to obtain grid indices from grid domain ranges.
 
 Most [`Plots.jl`](https://docs.juliaplots.org/stable/) keywords are available. In addition, the following keyword arguments are available:
 
@@ -248,14 +248,14 @@ Create and return basic plots `(dr_plot, density_plot)` for the [`DoseResponseRe
 
 If `results` is an [`AdaptiveResult`](@ref), both the fitted gird is plotted into the density plot and the corresponding curve is plotted into the dose-response plot.
 
-If `data` is a [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object the data points are plotted into the dose-response plot. Similarly, if `replicates` is an array of [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects, the data points are plotted as replicates in the dose-response plot.
+If `data` is a [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object the data points are plotted into the dose-response plot. Similarly, if `replicates` is an array of [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects, the data points are plotted as replicates in the dose-response plot.
 
 **Keywords**
 
-* `dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.result` and the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects (`data` and `replicates`) are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another dose-response plot). 
+* `dr_plot = `[`dr_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.result` and the [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) objects (`data` and `replicates`) are plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another dose-response plot). 
 * `density_plot = `[`density_base_plot()`](@ref): The base plot onto which the `AdaptiveResult.grid` is plotted. It can be any [`Plots.jl`](https://docs.juliaplots.org/stable/) plot (e.g. another `K_τ` density plot).
 * `fit_arguments = `[`fit_options()`](@ref): Keyword argument tuple for the `AdaptiveResult.result` data-series.
-* `data_arguments = `[`data_options()`](@ref): Keyword argument tuple for the [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) data-series.
+* `data_arguments = `[`data_options()`](@ref): Keyword argument tuple for the [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) data-series.
 * `replicate_arguments = `[`replicate_options()`](@ref): Keyword argument tuple for the replicate data-series.
 * `density_arguments = `[`density_options()`](@ref): Keyword argument tuple for the `AdaptiveResult.grid` data-series.
 * `annotation_arguments = NamedTuple()`: Keyword argument tuple for bin-annotations in the density plot. See below for further information.
@@ -328,7 +328,7 @@ Returns `(individual_dr_plot, cumulative_dr_plot, density_plot)`, where
 * `individual_dr_plot` contains the individual dose-response curves (color matched) that originate from the different peaks.
 * `cumulative_dr_plot` contains the cumulative dose-response curves, i.e. dose-responses include the response increases caused by peaks with smaller K_τ. Again the curves are color matched with the peaks.
 
-If `data` is a [`FittingData`](https://antibodypackages.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object the data points are plotted in the `cumulative_dr_plot`.
+If `data` is a [`FittingData`](https://translational-pain-research.github.io/FittingObjectiveFunctions-documentation/API/#FittingObjectiveFunctions.FittingData) object the data points are plotted in the `cumulative_dr_plot`.
 
 **Keywords**
 
